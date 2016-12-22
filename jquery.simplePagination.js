@@ -1,12 +1,12 @@
 /**
-* simplePagination.js v1.6
-* A simple jQuery pagination plugin.
-* http://flaviusmatis.github.com/simplePagination.js/
-*
-* Copyright 2012, Flavius Matis
-* Released under the MIT license.
-* http://flaviusmatis.github.com/license.html
-*/
+ * simplePagination.js v1.6
+ * A simple jQuery pagination plugin.
+ * http://flaviusmatis.github.com/simplePagination.js/
+ *
+ * Copyright 2012, Flavius Matis
+ * Released under the MIT license.
+ * http://flaviusmatis.github.com/license.html
+ */
 
 (function($){
 
@@ -23,6 +23,8 @@
 				hrefTextSuffix: '',
 				prevText: 'Prev',
 				nextText: 'Next',
+				firstText: '',
+				lastText: '',
 				ellipseText: '&hellip;',
 				ellipsePageSet: true,
 				cssStyle: 'light-theme',
@@ -173,6 +175,11 @@
 
 			var $panel = tagName === 'UL' ? this : $('<ul' + (o.listStyle ? ' class="' + o.listStyle + '"' : '') + '></ul>').appendTo(this);
 
+			//Generate First link
+			if (o.firstText) {
+				methods._appendItem.call(this, 0, {text: o.firstText, classes: 'first'});
+			}
+
 			// Generate Prev link
 			if (o.prevText) {
 				methods._appendItem.call(this, !o.invertPageOrder ? o.currentPage - 1 : o.currentPage + 1, {text: o.prevText, classes: 'prev'});
@@ -263,6 +270,11 @@
 				methods._appendItem.call(this, !o.invertPageOrder ? o.currentPage + 1 : o.currentPage - 1, {text: o.nextText, classes: 'next'});
 			}
 
+			//Generate Last link
+			if (o.lastText) {
+				methods._appendItem.call(this, o.pages, {text: o.lastText, classes: 'last'});
+			}
+
 			if (o.ellipsePageSet && !o.disabled) {
 				methods._ellipseClick.call(this, $panel);
 			}
@@ -298,7 +310,7 @@
 			options = $.extend(options, opts || {});
 
 			if (pageIndex == o.currentPage || o.disabled) {
-				if (o.disabled || options.classes === 'prev' || options.classes === 'next') {
+				if (o.disabled || options.classes === 'prev' || options.classes === 'next' || options.classes === 'first' || options.classes === 'last') {
 					$linkWrapper.addClass('disabled');
 				} else {
 					$linkWrapper.addClass('active');
@@ -356,7 +368,7 @@
 							if (event.which === 13 && val !== '') {
 								// enter to accept
 								if ((val>0)&&(val<=o.pages))
-								methods._selectPage.call(self, val - 1);
+									methods._selectPage.call(self, val - 1);
 							} else if (event.which === 27) {
 								// escape to cancel
 								$ellip.empty().html(o.ellipseText);
